@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { ViroARScene, ViroText, ViroButton, ViroARSceneNavigator, ViroBox, ViroMaterials, ViroNode, ViroImage, ViroQuad, ViroFlexView } from '@viro-community/react-viro';
+import { ViroARScene, ViroText, ViroButton, ViroARSceneNavigator, ViroBox, ViroMaterials, ViroNode, ViroImage, ViroQuad, ViroFlexView, ViroARPlaneSelector, ViroSphere, ViroSpotLight, ViroAnimations } from '@viro-community/react-viro';
 
 export default function ARDashboard() {
   const [isAnimating, setIsAnimating] = useState(false); // Animation state
   const [gazedButton, setGazedButton] = useState('');
   const [isLaserVisible, setIsLaserVisible] = useState(false);
+  const [ActiveButton, setActiveButton] = useState('Projects');
   const [isARSceneMounted, setARSceneMounted] = useState(true);
 
   const handleTextGaze = () => {
@@ -51,6 +52,60 @@ export default function ARDashboard() {
     drone2: {
       diffuseTexture: require('../assets/Drone/FINAL_TEXTURE.png'),
     },
+    BLWorkInactive: {
+      diffuseTexture: require('../assets/NewImages/BLWorkInactive.png'),
+    },
+    ActiveHome: {
+      diffuseTexture: require('../assets/NewImages/Home.png'),
+    },
+    ChatsInactive: {
+      diffuseTexture: require('../assets/NewImages/ChatsInactive.png'),
+    },
+    DiscussionsInactive: {
+      diffuseTexture: require('../assets/NewImages/DiscussionsInactive.png'),
+    },
+    EventsInactive: {
+      diffuseTexture: require('../assets/NewImages/EventsInactive.png'),
+    },
+    sphereB: {
+      roughness: 0.2,
+      metalness: 1.0,
+      lightingModel: "PBR",
+      diffuseColor: "#FFFFFF"
+    },
+    MainBG: {
+      // roughnessTexture: require('../assets/NewImages/MainBG.png'),
+      diffuseTexture: require('../assets/NewImages/MainBG.png'),
+      // metalness: 100,
+      // blendMode: 'Alpha',
+      // diffuseIntensity: 10,
+      // bloomThreshold: 300,
+      // roughness: 0.5,
+      // metalness: 1.0,
+      // lightingModel: "PBR",
+      // diffuseColor: "#FFFFFF"
+    },
+    MainBG2: {
+      diffuseTexture: require('../assets/NewImages/BGmain2.png'),
+    },
+    ProjectsInactive: {
+      diffuseTexture: require('../assets/NewImages/ProjectsInactive.png'),
+    },
+    ActiveProjects: {
+      diffuseTexture: require('../assets/NewImages/ActiveProjects.png'),
+    },
+    SavedInactive: {
+      diffuseTexture: require('../assets/NewImages/SavedInactive.png'),
+    },
+    Sidebar: {
+      diffuseTexture: require('../assets/NewImages/Sidebar.png'),
+    },
+    BlueLearnLogo: {
+      diffuseTexture: require('../assets/NewImages/BlueLearnLogo.png'),
+    },
+    InactiveHome: {
+      diffuseTexture: require('../assets/NewImages/InactiveHome.png'),
+    },
     background: {
       // lightingModel: 'Phong',
       blendMode: 'Alpha',
@@ -80,10 +135,45 @@ export default function ARDashboard() {
     // setIsPointerVisible(isVisible);
   };
 
+
+
+  ViroAnimations.registerAnimations({
+    moveRight: {
+      properties: {
+        positionX: "+=0.3"
+      },
+      duration: 3000
+    },
+    moveLeft: {
+      properties: {
+        positionX: "-=0.3",
+        rotateZ: "+=45"
+      },
+      duration: 3000
+    },
+    rotate: {
+      properties: {
+        rotateZ: "+=45"
+      },
+      duration: 1000
+    },
+    moveLeftRight: [
+      ["moveRight", "moveLeft"],
+    ]
+  });
   const handleObjectCollision = (nodeName) => {
     console.log('Collided with', nodeName);
     // Perform actions when the laser pointer collides with an object
   };
+  const [currentAnim, setCurrentAnim] = useState("moveLeftRight");
+
+  const handleSwitchAnimation = () => {
+    console.log(24)
+    setCurrentAnim((prevAnim) => {
+      if (prevAnim === "moveLeftRight") return "rotate"
+      return "moveLeftRight";
+    });
+  }
 
   const HelloWorldSceneAR2 = () => (
     <ViroARScene>
@@ -150,100 +240,154 @@ export default function ARDashboard() {
         /> */}
 
         {/* Left Side Buttons */}
-        <ViroNode position={[-1, 0.4, 10]} onClick={() => console.log('Dashboard clicked!')}>
-          {/* <ViroBox
-            scale={[0.3, 0.2, 0.1]}
-            materials={['background']}
-          /> */}
-          <ViroFlexView
-            style={{
-              width: 1,
-              height: 0.6,
-              borderRadius: 10, // Adjust the borderRadius value as needed
-              backgroundColor: '#89898990',
-              // justifyContent: 'flex-start',
-              // alignItems: 'center',
-            }}
-          >
-            {/* <ViroNode position={[-1, 0.8, 0]} onClick={() => console.log('Chats clicked!')}> */}
-            {/* <ViroBox
-              scale={[0.3, 0.3, 0.1]}
-              materials={['background']}
-            />
-            <ViroText
-              text="Chats"
-              scale={[0.2, 0.2, 0.2]}
-              position={[0, 0, -0.09]}
-              style={{ color: '#FFFFFF' }}
-            /> */}
-            {/* </ViroNode> */}
-            {/* <ViroText
-              text="Dashboard"
-              scale={[0.2, 0.2, 0.2]}
-              position={[0, 0, -0.09]}
-
-              style={{ color: '#FFFFFF' }}
-            /> */}
-            {/* 
-            <ViroNode onClick={() => console.log('Work clicked!')}>
-              <ViroBox
-                scale={[0.3, 0.3, 0.1]}
-                materials={['background']}
-              />
-              <ViroText
-                text="Work"
-                scale={[0.2, 0.2, 0.2]}
-                position={[0, 0, -0.05]}
-                style={{ color: '#FFFFFF' }}
-              />
-            </ViroNode> */}
-
-          </ViroFlexView>
-
-        </ViroNode>
-
+        <ViroSpotLight
+          innerAngle={5}
+          outerAngle={25}
+          direction={[0, -1, -.2]}
+          position={[0, 3, 1]}
+          color="#ffffff"
+          castsShadow={true}
+          shadowMapSize={2048}
+          shadowNearZ={2}
+          shadowFarZ={5}
+          shadowOpacity={.7} />
+        <ViroSphere
+          position={[0, 0, 0]}
+          radius={0.3}
+          materials={"sphereB"} />
+        <ViroBox
+          position={[-1, 0, -0.7]}
+          scale={[0.1, 0.4, 0.1]}
+          onClick={handleSwitchAnimation}
+          animation={{
+            name: currentAnim,
+            run: true,
+            interruptible: true
+          }} />
         <ViroFlexView rotation={[0, 0, 0]}
-          height={1.3}
+          dragType="FixedToWorld" onDrag={() => { }}
+          height={1.6}
           style={{
-
+            overflow: 'hidden'
             // justifyContent: 'center',
             // alignItems: 'center',
-            backgroundColor: '#00000050',
+            // backgroundColor: '#00000050',
             // borderTopRightRadius: 100
+
           }}
           width={2.5}
-          materials={['background']}
-          position={[-1, 0.1, -0.4]}
+          materials={['MainBG']}
+          position={[-1, 0.1, -0.7]}
         >
-          {/* <ViroBox
-            scale={[1.8, 1, 0.1]}
-            materials={['background']}
-          /> */}
 
-          <ViroFlexView rotation={[0, 0, 0]}
-            height={0.3}
+          <ViroFlexView
+            width={0.9}
+            height={1.6}
             style={{
-
+              padding: 0.06,
+              paddingTop: 0.1
               // justifyContent: 'center',
               // alignItems: 'center',
-              backgroundColor: 'red',
-              borderTopRightRadius: 100
             }}
-            width={0.5}
-            materials={['background']}
-            position={[-0.7, 0.1, -0.4]} onClick={() => console.log('Discussions clicked!')}>
-            <ViroText
-              text="Discussions"
-              scale={[0.2, 0.2, 0.2]}
-              position={[0, 0, -0.09]}
+            materials={['Sidebar']}>
+            <ViroFlexView style={{ padding: 0.02 }} ></ViroFlexView>
 
-              style={{ color: '#FFFFFF' }}
-            />
+            <ViroFlexView
+              height={0.08}
+              width={0.34}
+              style={{
+                // paddingTop: 0.5
+              }}
+              materials={['BlueLearnLogo']}
+              position={[0, 0, -0.4]}
+              onClick={() => console.log('Discussions clicked!')}>
+            </ViroFlexView>
+            <ViroFlexView style={{ padding: 0.09 }} ></ViroFlexView>
+            {ActiveButton === 'Home' ? <ViroFlexView
+              height={0.15}
+              width={0.7}
+              materials={['ActiveHome']}
+              position={[0, 0, -0.4]}
+              onTouch={() => setActiveButton('Home')}
+              onClick={() => setActiveButton('Home')}
+            >
+            </ViroFlexView>
+              :
+              <ViroFlexView
+                height={0.15}
+                width={0.7}
+                materials={['InactiveHome']}
+                position={[0, 0, -0.4]}
+                onTouch={() => setActiveButton('Home')}
+                onClick={() => setActiveButton('Home')}
+              >
+              </ViroFlexView>}
+            <ViroFlexView
+              height={0.15}
+              width={0.7}
+              materials={['DiscussionsInactive']}
+              position={[0, 0, -0.4]}
+
+              onClick={() => console.log('Discussions clicked!')}>
+            </ViroFlexView>
+            <ViroFlexView
+              height={0.15}
+              width={0.7}
+              materials={['EventsInactive']}
+              position={[0, 0, -0.4]}
+
+              onClick={() => console.log('EventsInactive clicked!')}>
+            </ViroFlexView>
+            <ViroFlexView
+              height={0.15}
+              width={0.7}
+              materials={['BLWorkInactive']}
+              position={[0, 0, -0.4]}
+
+              onClick={() => console.log('BLWorkInactive clicked!')}>
+            </ViroFlexView>
+            {ActiveButton === 'Projects' ? <ViroFlexView
+              height={0.15}
+              width={0.7}
+              materials={['ActiveProjects']}
+              position={[0, 0, -0.4]}
+              onTouch={() => setActiveButton('Projects')}
+              onClick={() => setActiveButton('Projects')}>
+            </ViroFlexView>
+              : <ViroFlexView
+                height={0.15}
+                width={0.7}
+                materials={['ProjectsInactive']}
+                position={[0, 0, -0.4]}
+                onTouch={() => setActiveButton('Projects')}
+                onClick={() => setActiveButton('Projects')}>
+              </ViroFlexView>}
+            <ViroFlexView
+              height={0.15}
+              width={0.7}
+              materials={['ChatsInactive']}
+              position={[0, 0, -0.4]}
+
+              onClick={() => console.log('Discussions clicked!')}>
+            </ViroFlexView>
+            <ViroFlexView style={{ padding: 0.05, }} ></ViroFlexView>
+
+            <ViroFlexView
+              height={0.15}
+              width={0.7}
+              materials={['SavedInactive']}
+              position={[0, 0, -0.4]}
+
+              onClick={() => console.log('Discussions clicked!')}>
+            </ViroFlexView>
+
           </ViroFlexView>
 
-          <ViroNode position={[-1, -0.2, 0]} onClick={() => console.log('Events clicked!')}>
+          <ViroNode
+
+            position={[-1, -0.2, 0]} onClick={() => console.log('Events clicked!')}>
             <ViroBox
-              scale={[0.3, 0.3, 0.1]}
+              scale={[0.6, 0.3, 0.1]}
               materials={['background']}
             />
             <ViroText
@@ -268,18 +412,13 @@ export default function ARDashboard() {
           </ViroNode>
         </ViroFlexView>
 
-        {/* <ViroNode position={[-1, 0.8, 0]} onClick={() => console.log('Chats clicked!')}>
-          <ViroBox
-            scale={[0.3, 0.3, 0.1]}
-            materials={['background']}
-          />
-          <ViroText
-            text="Chats"
-            scale={[0.2, 0.2, 0.2]}
-            position={[0, 0, -0.09]}
-            style={{ color: '#FFFFFF' }}
-          />
-        </ViroNode> */}
+        <ViroQuad
+          position={[0, 0, 0]}
+          rotation={[-90, 0, 0]}
+          width={4} height={4}
+          arShadowReceiver={true} />
+
+
 
         {/* Profile Image, Notifications, and Username */}
         <ViroImage
@@ -349,7 +488,7 @@ export default function ARDashboard() {
           </Text>
         </TouchableOpacity> */}
         <TouchableOpacity
-          onPress={handleResetARSession}
+          onPress={() => console.log(124)}
           style={styles.switch}>
           <Text
             style={{
